@@ -1,7 +1,9 @@
 import connectDb from './config/db.js'
 import app from './index.js'
 
-app.listen(8000 , async () => {
+
+const port = 8000
+app.listen(port , async () => {
     await connectDb();
-    console.log("app is running on port 8000")
+    console.log("app is running on port ",port)
 })

@@ -6,4 +6,6 @@ const connectDb = () => {
     return mongoose.connect(mongoURL)
 }
 
+// mongoose.connect(mongoURL).then(() => console.log("Database Connected");)
+
 export default connectDb

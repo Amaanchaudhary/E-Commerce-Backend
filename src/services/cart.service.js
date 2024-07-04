@@ -1,4 +1,4 @@
-import cartModel from "../Models/cart.model"
+import cartModel from "../Models/cart.model.js"
 
 async function createCart(user){
     try{

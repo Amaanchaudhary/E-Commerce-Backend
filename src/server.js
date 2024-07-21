@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import connectDb from './config/db.js'
 import app from './index.js'
 
@@ -16,4 +17,5 @@ app.listen(port, async () => {
         console.error("Database connection failed", error);
     }
     console.log("app is running on port", port);
+    console.log(mongoose.modelNames());
 });

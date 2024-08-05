@@ -16,7 +16,13 @@ export async function createCart(user) {
 export async function findUserCart(userId) {
     try {
         let cart = await cartModel.findOne({ user: userId })
-        const cartItems = await cartItemModel.find({ cart: cart._id }).populate("product");
+        if (!cart) {
+            throw new Error("Cart not found for user with id: " + userId);
+        }
+        const cartItems = await cartItemModel.find({ cart: cart?._id }).populate("product");
+        if (!cartItems) {
+            throw new Error("No cart items found for cart with id: " + cart?._id);
+        }  
         cart.cartItems = cartItems
         let totalPrice = 0;
         let totalDiscountedPrice = 0;
@@ -29,8 +35,8 @@ export async function findUserCart(userId) {
         }
 
         cart.totalPrice = totalPrice
-        cart.totalItem = totalItem
-        cart.totalPrice = totalPrice - totalDiscountedPrice
+        cart.totalItems = totalItem
+        cart.totalDiscountedPrice = totalPrice - totalDiscountedPrice
 
         return cart;
 

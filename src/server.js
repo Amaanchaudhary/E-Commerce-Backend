@@ -17,5 +17,5 @@ app.listen(port, async () => {
         console.error("Database connection failed", error);
     }
     console.log("app is running on port", port);
-    console.log(mongoose.modelNames());
+    // console.log(mongoose.modelNames());
 });

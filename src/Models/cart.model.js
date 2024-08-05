@@ -11,12 +11,12 @@ const cartSchema = new Schema({
         ref: "cartItems",
         required: true,
     }],
-    totalPrice: [{
+    totalPrice: {
         type: Number,
         required: true,
         default : 0
-    }],
-    totalItem: {
+    },
+    totalItems: {
         type: Number,
         required: true,
         default : 0

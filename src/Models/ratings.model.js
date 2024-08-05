@@ -7,7 +7,7 @@ const ratingsSchema = new Schema({
         required : true
     },
     product: {
-        ype : mongoose.Schema.Types.ObjectId,
+        type : mongoose.Schema.Types.ObjectId,
         ref : "products",
         required : true
     },

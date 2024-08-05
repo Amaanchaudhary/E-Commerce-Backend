@@ -7,7 +7,7 @@ export const register = async (req, res) => {
     try {
         const user = await createUser(req.body)
         const jwt = await generateToken(user._id)
-        // await createCart(user)
+        await createCart(user)
         return res.status(200).send({ jwt, message: "Register Success" })
 
     } catch (error) {

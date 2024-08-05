@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const orderSchema = new Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        required: "users"
+        ref: "users"
     },
     orderItems: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -53,7 +53,7 @@ const orderSchema = new Schema({
         required : true,
         default : "PENDING"
     },
-    totalItem : {
+    totalItems : {
         type : Number,
         required : true
     },

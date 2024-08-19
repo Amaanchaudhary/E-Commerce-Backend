@@ -1,30 +1,42 @@
 import cartItemModel from '../Models/cartItem.model.js';
+import productModel from '../Models/product.model.js';
 import { findUserById } from './user.service.js'
 
 export async function updateCartItem(userId, cartItemId, cartItemData) {
-    
+
     try {
         const item = await findCartItemById(cartItemId);
-        
+
         if (!item) {
             throw new Error("Cart item not found : ", cartItemId)
         }
 
-        const user = await findUserById(item.userId);        
+        const user = await findUserById(item.userId);
 
         if (!user) {
             throw new Error("User Not Found : ", userId)
         }
 
+        const product = await productModel.findById(item.product)
+        if (!product) {
+            throw new Error(`Product not found: ${item.product}`);
+        }
+
         if (user._id.toString() === userId.toString()) {
             item.quantity = cartItemData?.quantity
 
-            if (typeof item.product.price !== 'number' || typeof item.product.discountedPrice !== 'number') {
-                throw new Error("Invalid product price or discounted price");
+            const price = parseFloat(product.price)
+            const discountedPrice = parseFloat(product.discountedPrice)
+
+            if (isNaN(price)) {
+                throw new Error("Invalid product price");
+            }
+            if (isNaN(discountedPrice)) {
+                throw new Error("Invalid product discounted price");
             }
 
-            item.price = item.quantity * item.product.price
-            item.discountedPrice = item.quantity * item.product.discountedPrice;
+            item.price = Number(item.quantity) * price
+            item.discountedPrice = Number(item.quantity) * discountedPrice
             const updatedCartItem = await item.save();
             return updatedCartItem;
         }
@@ -60,7 +72,7 @@ export async function findCartItemById(cartItemId) {
         if (cartItem) {
             return cartItem
         } else {
-            throw new Error("Cart Item not found with id : ",cartItemId)
+            throw new Error("Cart Item not found with id : ", cartItemId)
         }
 
     } catch (error) {

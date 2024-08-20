@@ -2,16 +2,17 @@ import categoryModel from "../Models/category.model.js";
 import productModel from "../Models/product.model.js";
 
 export async function createProduct(reqData) {
-    
+    console.log(reqData);
     let topLevel = await categoryModel.findOne({ name: reqData.topLevelCategory })
-    
+
     if (!topLevel) {
         topLevel = new categoryModel({
             name: reqData.topLevelCategory,
             level: 1,
         })
+        await topLevel.save()
     }
-    
+
     let secondLevelCategory = await categoryModel.findOne({
         name: reqData.secondLevelCategory,
         parentCategory: topLevel._id
@@ -23,6 +24,7 @@ export async function createProduct(reqData) {
             parentCategory: topLevel._id,
             level: 2
         })
+        await secondLevelCategory.save()
     }
 
     let thirtLevelCategory = await categoryModel.findOne({
@@ -32,10 +34,12 @@ export async function createProduct(reqData) {
 
     if (!thirtLevelCategory) {
         thirtLevelCategory = new categoryModel({
-            name: reqData.thirtLevelCategory,
+            name: reqData.thirdLevelCategory,
             parentCategory: secondLevelCategory._id,
             level: 3
         })
+        await thirtLevelCategory.save()
+
     }
 
     const product = new productModel({
@@ -71,7 +75,7 @@ export async function findProductById(id) {
         .populate("category").exec();  // replace with the actual document data
 
     if (!product) {
-        throw new Error("Product not found with id : " , id)
+        throw new Error("Product not found with id : ", id)
     }
 
     return product
@@ -81,7 +85,8 @@ export async function getAllProducts(reqQuery) {
     let { category, color, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize }
         = reqQuery
 
-    pageSize = pageSize || 10
+    pageSize = parseInt(pageSize) || 10;
+    pageNumber = parseInt(pageNumber) || 1;
 
     let query = productModel.find().populate("category");
 
@@ -91,62 +96,62 @@ export async function getAllProducts(reqQuery) {
             query = query.where("category").equals(existCategory._id)
         }
         else {
-            return { content : [] , currentPage : 1 , totalPages : 0}
+            return { content: [], currentPage: 1, totalPages: 0 }
         }
     }
-    
-    if(color){
+
+    if (color) {
         const colorSet = new Set(color.split(",").map(color => color.trim().toLowerCase()))
 
-        const colorRegex = colorSet.size > 0 ? new RegExp([...colorSet].join("|"),"i") : null
+        const colorRegex = colorSet.size > 0 ? new RegExp([...colorSet].join("|"), "i") : null
 
         query = query.where("color").regex(colorRegex)
     }
 
-    if(sizes){
+    if (sizes) {
         const sizesSet = new Set(sizes);
 
         query = query.where("sizes.name").in([...sizesSet])
     }
 
-    if(minPrice && maxPrice){
+    if (minPrice && maxPrice) {
         query = query.where("discountedprice").gte(maxPrice).lte(maxPrice);
     }
 
-    if(minDiscount){
+    if (minDiscount) {
         query = query.where("discountPercent").gte(minDiscount);
     }
 
-    if(stock){
-        if(stock == "in_stock"){
+    if (stock) {
+        if (stock == "in_stock") {
             query = query.where("quantity").gt(0)
         }
-        else if(stock == "out_of_stock"){
+        else if (stock == "out_of_stock") {
             query = query.where("quantity").gt(1)
         }
     }
 
-    if(sort){
+    if (sort) {
         const sortDirection = sort === "price_high" ? -1 : 1
-        query = query.sort({discountedPrice : sortDirection})
+        query = query.sort({ discountedPrice: sortDirection })
     }
 
     const totalProducts = await productModel.countDocuments(query)
 
-    const skip = (pageNumber - 1)*pageSize
+    const skip = (pageNumber - 1) * pageSize
 
     query = query.skip(skip).limit(pageSize);
 
     const products = await query.exec()
 
-    const totalPages = Math.ceil(totalProducts/pageSize)
+    const totalPages = Math.ceil(totalProducts / pageSize)
 
-    return {content : products , currentPage : pageNumber , totalPages}
-    
+    return { content: products, currentPage: pageNumber,  totalPages: totalPages || 1 }
+
 }
 
-export async function createMultipleProducts(products){
-    for(let product of products){
+export async function createMultipleProducts(products) {
+    for (let product of products) {
         await createProduct(product);
     }
 }

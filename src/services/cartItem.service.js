@@ -6,27 +6,28 @@ export async function updateCartItem(userId, cartItemId, cartItemData) {
 
     try {
         const item = await findCartItemById(cartItemId);
-
+        
         if (!item) {
             throw new Error("Cart item not found : ", cartItemId)
         }
-
+        
+        // console.log("item",item);
         const user = await findUserById(item.userId);
 
         if (!user) {
             throw new Error("User Not Found : ", userId)
         }
 
-        const product = await productModel.findById(item.product)
-        if (!product) {
-            throw new Error(`Product not found: ${item.product}`);
-        }
+        // const product = await productModel.findById(item.product)
+        // if (!product) {
+        //     throw new Error(`Product not found: ${item.product}`);
+        // }
 
         if (user._id.toString() === userId.toString()) {
             item.quantity = cartItemData?.quantity
 
-            const price = parseFloat(product.price)
-            const discountedPrice = parseFloat(product.discountedPrice)
+            const price = parseFloat(item.product.price)
+            const discountedPrice = parseFloat(item.product.discountedPrice)
 
             if (isNaN(price)) {
                 throw new Error("Invalid product price");
@@ -67,7 +68,7 @@ export async function removeCartItem(userId, cartItemId) {
 
 export async function findCartItemById(cartItemId) {
     try {
-        const cartItem = await cartItemModel.findById(cartItemId)
+        const cartItem = await cartItemModel.findById(cartItemId).populate('product')   
 
         if (cartItem) {
             return cartItem

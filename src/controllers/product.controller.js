@@ -43,6 +43,7 @@ export const FindProductById = async (req, res) => {
 }
 
 export const GetAllProducts = async (req, res) => {
+    
     try {
         const products = await getAllProducts(req.query)
         return res.status(200).send(products);

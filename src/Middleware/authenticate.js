@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { getUserIdFromToken } from '../config/jwtProvider.js'
 import { findUserById } from '../services/user.service.js'
 
-export const authenticate = async (req, res, next) => {
+export const authenticate = async (req, res, next) => {    
     try {
         const token = req.headers.authorization?.split(" ")[1]
         if (!token) {

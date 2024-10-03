@@ -5,6 +5,8 @@ export async function createProduct(reqData) {
     console.log(reqData);
     let topLevel = await categoryModel.findOne({ name: reqData.topLevelCategory })
 
+
+
     if (!topLevel) {
         topLevel = new categoryModel({
             name: reqData.topLevelCategory,
@@ -81,7 +83,8 @@ export async function findProductById(id) {
     return product
 }
 
-export async function getAllProducts(reqQuery) {
+export async function getAllProducts(reqQuery) {    
+    
     let { category, color, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize }
         = reqQuery
 
@@ -115,7 +118,7 @@ export async function getAllProducts(reqQuery) {
     }
 
     if (minPrice && maxPrice) {
-        query = query.where("discountedprice").gte(maxPrice).lte(maxPrice);
+        query = query.where("discountedprice").gte(minPrice).lte(maxPrice);
     }
 
     if (minDiscount) {
@@ -151,6 +154,8 @@ export async function getAllProducts(reqQuery) {
 }
 
 export async function createMultipleProducts(products) {
+    console.log(products ,"product");
+    
     for (let product of products) {
         await createProduct(product);
     }

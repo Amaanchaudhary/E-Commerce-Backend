@@ -11,7 +11,6 @@ export const createUser = async (userData) => {
         }
         password = await bcrypt.hash(password, 8);
         const user = await userModel.create({ firstname, lastname, email, password })
-        console.log("Created user :", user);
         return user;
 
     } catch (error) {

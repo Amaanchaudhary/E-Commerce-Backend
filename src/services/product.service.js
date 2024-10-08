@@ -2,10 +2,7 @@ import categoryModel from "../Models/category.model.js";
 import productModel from "../Models/product.model.js";
 
 export async function createProduct(reqData) {
-    console.log(reqData);
     let topLevel = await categoryModel.findOne({ name: reqData.topLevelCategory })
-
-
 
     if (!topLevel) {
         topLevel = new categoryModel({
@@ -83,8 +80,8 @@ export async function findProductById(id) {
     return product
 }
 
-export async function getAllProducts(reqQuery) {    
-    
+export async function getAllProducts(reqQuery) {
+
     let { category, color, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize }
         = reqQuery
 
@@ -95,6 +92,8 @@ export async function getAllProducts(reqQuery) {
 
     if (category) {
         const existCategory = await categoryModel.findOne({ name: category })
+        console.log("Category:", category, "Found Category:", existCategory);
+
         if (existCategory) {
             query = query.where("category").equals(existCategory._id)
         }
@@ -115,14 +114,15 @@ export async function getAllProducts(reqQuery) {
         const sizesSet = new Set(sizes);
 
         query = query.where("sizes.name").in([...sizesSet])
+
     }
 
     if (minPrice && maxPrice) {
-        query = query.where("discountedprice").gte(minPrice).lte(maxPrice);
+        query = query.where("price").gte(minPrice).lte(maxPrice);
     }
 
     if (minDiscount) {
-        query = query.where("discountPercent").gte(minDiscount);
+        query = query.where("discountedPrice").gte(minDiscount);
     }
 
     if (stock) {
@@ -130,13 +130,14 @@ export async function getAllProducts(reqQuery) {
             query = query.where("quantity").gt(0)
         }
         else if (stock == "out_of_stock") {
-            query = query.where("quantity").gt(1)
+            query = query.where("quantity").lte(0)
         }
     }
 
     if (sort) {
         const sortDirection = sort === "price_high" ? -1 : 1
         query = query.sort({ discountedPrice: sortDirection })
+
     }
 
     const totalProducts = await productModel.countDocuments(query)
@@ -144,18 +145,17 @@ export async function getAllProducts(reqQuery) {
     const skip = (pageNumber - 1) * pageSize
 
     query = query.skip(skip).limit(pageSize);
-
-    const products = await query.exec()
+    
+    const products = await query.exec()    
 
     const totalPages = Math.ceil(totalProducts / pageSize)
 
-    return { content: products, currentPage: pageNumber,  totalPages: totalPages || 1 }
+    return { content: products, currentPage: pageNumber, totalPages: totalPages || 1 }
 
 }
 
 export async function createMultipleProducts(products) {
-    console.log(products ,"product");
-    
+
     for (let product of products) {
         await createProduct(product);
     }

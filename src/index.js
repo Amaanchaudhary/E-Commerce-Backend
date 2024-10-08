@@ -30,6 +30,6 @@ app.use("/api/cart_items", cartItemRouters)
 app.use("/api/orders", orderRouters)
 app.use("/api/reviews", reviewRouters)
 app.use("/api/ratings", ratingRouters)
-app.use("/api/admin/orders",  adminRouters)
+app.use("/api/admin/orders",  adminRouters)     
 
 export default app;

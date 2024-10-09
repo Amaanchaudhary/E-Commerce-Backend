@@ -4,6 +4,7 @@ import productModel from "../Models/product.model.js";
 export async function createProduct(reqData) {
     let topLevel = await categoryModel.findOne({ name: reqData.topLevelCategory })
 
+    // console.log(topLevel, "topLevel", reqData.topLevelCategory, "reqData.topLevel");
     if (!topLevel) {
         topLevel = new categoryModel({
             name: reqData.topLevelCategory,
@@ -17,6 +18,7 @@ export async function createProduct(reqData) {
         parentCategory: topLevel._id
     })
 
+    // console.log(secondLevelCategory, "secondLevelCategory", reqData.secondLevelCategory, "reqData.secondLevelCategory");
     if (!secondLevelCategory) {
         secondLevelCategory = new categoryModel({
             name: reqData.secondLevelCategory,
@@ -26,18 +28,20 @@ export async function createProduct(reqData) {
         await secondLevelCategory.save()
     }
 
-    let thirtLevelCategory = await categoryModel.findOne({
-        name: reqData.thirtLevelCategory,
+    let thirdLevelCategory = await categoryModel.findOne({
+        name: reqData.thirdLevelCategory,
         parentCategory: secondLevelCategory._id
     })
 
-    if (!thirtLevelCategory) {
-        thirtLevelCategory = new categoryModel({
+    // console.log(thirdLevelCategory, "thirdLevelCategory", reqData.thirdLevelCategory, "reqData.thirdLevelCategory");
+    if (!thirdLevelCategory) {
+
+        thirdLevelCategory = new categoryModel({
             name: reqData.thirdLevelCategory,
             parentCategory: secondLevelCategory._id,
             level: 3
         })
-        await thirtLevelCategory.save()
+        await thirdLevelCategory.save()
 
     }
 
@@ -52,7 +56,7 @@ export async function createProduct(reqData) {
         price: reqData.price,
         sizes: reqData.size,
         quantity: reqData.quantity,
-        category: thirtLevelCategory._id,
+        category: thirdLevelCategory._id,
     })
 
     return await product.save();
@@ -118,18 +122,18 @@ export async function getAllProducts(reqQuery) {
     }
 
     if (minPrice && maxPrice) {
-        query = query.where("price").gte(minPrice).lte(maxPrice);
+        query = query.where("discountedPrice").gte(minPrice).lte(maxPrice);
     }
 
     if (minDiscount) {
-        query = query.where("discountedPrice").gte(minDiscount);
+        query = query.where("discountPercent").gte(minDiscount);
     }
 
     if (stock) {
-        if (stock == "in_stock") {
+        if (stock == "InStock") {
             query = query.where("quantity").gt(0)
         }
-        else if (stock == "out_of_stock") {
+        else if (stock == "OutOfStock") {
             query = query.where("quantity").lte(0)
         }
     }
@@ -145,8 +149,8 @@ export async function getAllProducts(reqQuery) {
     const skip = (pageNumber - 1) * pageSize
 
     query = query.skip(skip).limit(pageSize);
-    
-    const products = await query.exec()    
+
+    const products = await query.exec()
 
     const totalPages = Math.ceil(totalProducts / pageSize)
 

@@ -49,7 +49,7 @@ export async function addCartItem(userId, req) {
     try {
         const cart = await cartModel.findOne({ user: userId })
         const product = await ProductModel.findById(req.productId);
-
+        
         const isPresent = await cartItemModel.findOne({ cart: cart._id, product: product._id, userId })
 
         if (!isPresent) {

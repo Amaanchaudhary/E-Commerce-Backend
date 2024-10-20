@@ -20,6 +20,7 @@ export async function findUserCart(userId) {
             throw new Error("Cart not found for user with id: " + userId);
         }
         const cartItems = await cartItemModel.find({ cart: cart?._id }).populate("product");
+
         if (!cartItems) {
             throw new Error("No cart items found for cart with id: " + cart?._id);
         }  
@@ -36,7 +37,8 @@ export async function findUserCart(userId) {
 
         cart.totalPrice = totalPrice
         cart.totalItems = totalItem
-        cart.totalDiscountedPrice = totalPrice - totalDiscountedPrice
+        cart.totalDiscountedPrice = totalDiscountedPrice 
+        cart.discounte = totalPrice - totalDiscountedPrice
 
         return cart;
 

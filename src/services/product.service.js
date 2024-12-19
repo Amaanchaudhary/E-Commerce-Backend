@@ -86,11 +86,10 @@ export async function findProductById(id) {
 
 export async function getAllProducts(reqQuery) {
 
-    let { category, color, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize }
-        = reqQuery
+    let { category, color, sizes, minPrice, maxPrice, minDiscount, sort, stock, pageNumber, pageSize } = reqQuery
 
-    pageSize = parseInt(pageSize) || 10;
     pageNumber = parseInt(pageNumber) || 1;
+    pageSize = parseInt(pageSize) || 10;
 
     let query = productModel.find().populate("category");
 
@@ -116,9 +115,7 @@ export async function getAllProducts(reqQuery) {
 
     if (sizes) {
         const sizesSet = new Set(sizes);
-
         query = query.where("sizes.name").in([...sizesSet])
-
     }
 
     if (minPrice && maxPrice) {

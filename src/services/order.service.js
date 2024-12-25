@@ -37,7 +37,7 @@ export async function createOrder(user, shipAddress) {
     }
 
     const createdOrder = new orderModel({
-        user : user._id,
+        user: user._id,
         orderItems,
         totalPrice: cart.totalPrice,
         totalDiscountedPrice: cart.totalDiscountedPrice,
@@ -116,8 +116,16 @@ export async function userOrderHistory(userId) {
 }
 
 export async function getAllOrders() {
-    return await orderModel.find()
-        .populate({ path: "orderItems", populate: { path: "product" } }).lean();
+    const allOrders = await orderModel.find()
+        .populate("user")
+        .populate("shippingAddress")
+        .populate({ path: "orderItems", populate: { path: "product" } }).lean()
+
+    if (!allOrders) {
+        throw new Error('Orders not found');
+    }
+
+    return allOrders
 }
 
 export async function deleteOrder(orderId) {

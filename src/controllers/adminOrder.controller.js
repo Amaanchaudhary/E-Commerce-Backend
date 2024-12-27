@@ -1,4 +1,4 @@
-import { getAllOrders, confirmedOrder } from '../services/order.service.js'
+import { getAllOrders, confirmedOrder, deliveredOrder, shippedOrder, deleteOrder, cancelledOrder } from '../services/order.service.js'
 
 export const GetAllOrders = async (req, res) => {
     try {

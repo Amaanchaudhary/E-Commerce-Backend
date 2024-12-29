@@ -4,13 +4,13 @@ import { getUserIdFromToken } from '../config/jwtProvider.js'
 
 export const createUser = async (userData) => {
     try {
-        let { firstname, lastname, email, password } = userData
+        let { firstname, lastname, email, password, mobile } = userData
         const isUserExist = await userModel.findOne({ email })
         if (isUserExist) {
             throw new Error("User Already Exist with email : ", email)
         }
         password = await bcrypt.hash(password, 8);
-        const user = await userModel.create({ firstname, lastname, email, password })
+        const user = await userModel.create({ firstname, lastname, email, password, mobile })
         return user;
 
     } catch (error) {
@@ -21,7 +21,7 @@ export const createUser = async (userData) => {
 export const findUserById = async (userId) => {
     try {
         const user = await userModel.findById(userId)
-        .populate("address")
+            .populate("address")
         if (!user) {
             throw new Error("User not found with Id : ", userId)
         }

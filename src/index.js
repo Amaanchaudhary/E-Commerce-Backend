@@ -10,9 +10,10 @@ import orderRouters from './routes/order.routes.js'
 import reviewRouters from './routes/review.routes.js'
 import ratingRouters from './routes/rating.routes.js'
 import adminRouters from './routes/admin.routes.js'
+import paymentRouters from './routes/payment.routes.js'
+import dotenv from 'dotenv'
 
-
-
+dotenv.config();
 const app = express();
 app.use(cors());   //here we can define from which domain allow to hit this api's
 app.use(express.json())
@@ -20,6 +21,9 @@ app.use(express.json())
 app.get("/", (req, res) => {
     return res.status(200).send({ message: "Welcome to Ecommerce Api", status: true })
 })
+
+console.log("KEY_ID:", process.env.KEY_ID); // Should log the value
+console.log("KEY_SECRET:", process.env.KEY_SECRET); //
 
 app.use("/auth", authRouters)
 app.use("/api/users", userRouters)
@@ -30,6 +34,7 @@ app.use("/api/cart_items", cartItemRouters)
 app.use("/api/orders", orderRouters)
 app.use("/api/reviews", reviewRouters)
 app.use("/api/ratings", ratingRouters)
-app.use("/api/admin/orders",  adminRouters)     
+app.use("/api/admin/orders", adminRouters)
+app.use("/api/payments", paymentRouters)
 
 export default app;

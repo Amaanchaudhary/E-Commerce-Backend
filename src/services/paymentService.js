@@ -30,14 +30,10 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
       //after payment redirect to user to this link, {frontend page link}
       callback_url: `http://localhost:3000/payment/${orderId}`,
       callback_method: 'get'
-    }
-
-    console.log(paymentLinkRequest,"req");
-    
+    }    
 
     //7. created "paymentLink" with the help of instance of razorPay we created.
     const paymentLink = await razorPay.paymentLink.create(paymentLinkRequest)
-    console.log(paymentLink,"req2");
 
     //8. retrieve "id" and "short_url" from paymentLink 
     const paymentLinkId = paymentLink.id
@@ -72,7 +68,7 @@ export const updatePaymentInformation = async (reqData) => {
       order.paymentDetails = {
         ...order.paymentDetails,
         paymentId: payment_id,
-        status: "COMPLETED",
+        paymentStatus: "COMPLETED",
       };
       order.orderStatus = "PLACED"
     }

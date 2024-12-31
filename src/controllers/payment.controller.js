@@ -2,11 +2,11 @@ import { createPaymentLink, updatePaymentInformation } from "../services/payment
 
 
 export const CreatePaymentLink = async (req, res) => {
-  try {
+  try {    
     const paymentLink = await createPaymentLink(req.params.id)
     return res.status(200).send(paymentLink)
   } catch (error) {
-    return res.status(500).json({ error: error.message, sucess: false })
+    return res.status(500).json({ error: error.message, success: false })
   }
 }
 

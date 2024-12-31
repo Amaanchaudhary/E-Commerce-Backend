@@ -22,9 +22,6 @@ app.get("/", (req, res) => {
     return res.status(200).send({ message: "Welcome to Ecommerce Api", status: true })
 })
 
-console.log("KEY_ID:", process.env.KEY_ID); // Should log the value
-console.log("KEY_SECRET:", process.env.KEY_SECRET); //
-
 app.use("/auth", authRouters)
 app.use("/api/users", userRouters)
 app.use("/api/products", productRouters)

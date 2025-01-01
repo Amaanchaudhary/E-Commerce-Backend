@@ -23,7 +23,9 @@ const userSchema = new mongoose.Schema({
         default : "CUSTOMER"
     },
     mobile : {
-        type : String 
+        type : Number ,
+        required: true,
+        default: 98900000000
     },
     address : [{
         type : mongoose.Schema.Types.ObjectId,

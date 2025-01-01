@@ -91,7 +91,18 @@ export async function getAllProducts(reqQuery) {
     pageNumber = parseInt(pageNumber) || 1;
     pageSize = parseInt(pageSize) || 10;
 
-    let query = productModel.find().populate("category");
+    let query = productModel
+        .find()
+        .populate({
+            path: 'category',
+            populate: {
+                path: 'parentCategory',
+                populate: {
+                    path: 'parentCategory',  // Populate the childCategories inside the parentCategory
+                }
+            }
+        });
+
 
     if (category) {
         const existCategory = await categoryModel.findOne({ name: category })
@@ -103,6 +114,8 @@ export async function getAllProducts(reqQuery) {
         else {
             return { content: [], currentPage: 1, totalPages: 0 }
         }
+    } else {
+        query = query
     }
 
     if (color) {

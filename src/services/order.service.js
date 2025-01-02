@@ -112,7 +112,16 @@ export async function userOrderHistory(userId) {
     } catch (error) {
         throw new Error(error.message)
     }
+}
 
+export async function userAllOrder(userId) {
+    try {
+        const orders = await orderModel.find({ user: userId })
+            .populate({ path: "orderItems", populate: { path: "product" } }).lean();
+        return orders
+    } catch (error) {
+        throw new Error(error.message)
+    }
 }
 
 export async function getAllOrders() {

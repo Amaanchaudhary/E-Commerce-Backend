@@ -33,7 +33,7 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
       reminder_enable: true,
       //after payment redirect to user to this link, {frontend page link}
       // callback_url: `http://localhost:3000/payment/${orderId}`,
-      callback_url: `https://amaan-ecommerce.netlify.app/`,
+      callback_url: `https://amaan-ecommerce.netlify.app/payment/${orderId}`,
       callback_method: 'get'
     }
 

@@ -9,8 +9,12 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
 
     // Validate customer contact information
     const { firstname, lastname, mobile, email } = order.user;
-    if (!mobile || typeof mobile !== "string") {
-      throw new Error("Invalid or missing customer contact number");
+    console.log(firstname, lastname, mobile, email);
+
+    if (!mobile) {
+      throw new Error("missing customer contact number");
+    } else if (mobile !== "string") {
+      // throw new Error("Invalid customer contact number");
     }
 
     //6. create payment request obj
@@ -19,7 +23,7 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
       currency: "INR",
       customer: {
         name: `${firstname} ${lastname}`,
-        contact: mobile,
+        contact: String(mobile),
         email: email,
       },
       notify: {
@@ -28,9 +32,10 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
       },
       reminder_enable: true,
       //after payment redirect to user to this link, {frontend page link}
-      callback_url: `http://localhost:3000/payment/${orderId}`,
+      // callback_url: `http://localhost:3000/payment/${orderId}`,
+      callback_url: `https://amaan-ecommerce.netlify.app/payment/${orderId}`,
       callback_method: 'get'
-    }    
+    }
 
     //7. created "paymentLink" with the help of instance of razorPay we created.
     const paymentLink = await razorPay.paymentLink.create(paymentLinkRequest)
@@ -49,7 +54,7 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
     return resData
 
   } catch (error) {
-    console.error("Error in createPaymentLink: ", error);
+    console.error("Error in createPaymentLink: ", error.message);
     throw new Error(error);
   }
 }

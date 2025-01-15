@@ -5,7 +5,8 @@ import orderItemsModel from '../Models/orderItems.model.js'
 
 export async function createOrder(user, shipAddress) {
     let address;
-
+    console.log(shipAddress,'add');
+    
     if (shipAddress._id) {
         let existAddress = await addressModel.findById(shipAddress._id)
         address = existAddress
@@ -50,6 +51,17 @@ export async function createOrder(user, shipAddress) {
 
     return savedOrder;
 }
+
+export async function addAddress(user, shipAddress) {
+    console.log(shipAddress,'check');
+    
+    let address = new addressModel(shipAddress)
+    address.user = user
+    await address.save();
+    user.address.push(address)
+    return await user.save();
+}
+
 
 export async function placeOrder(orderId) {
     const order = await findOrderById(orderId);

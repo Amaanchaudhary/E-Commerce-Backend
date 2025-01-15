@@ -1,4 +1,4 @@
-import { createOrder, findOrderById, userAllOrder, userOrderHistory } from "../services/order.service.js"
+import { addAddress, createOrder, findOrderById, userAllOrder, userOrderHistory } from "../services/order.service.js"
 
 export const CreateOrder = async (req, res) => {
     const user = await req.user
@@ -9,6 +9,17 @@ export const CreateOrder = async (req, res) => {
         res.status(500).send({ error: error.message })
     }
 }
+
+export const AddAddress = async (req, res) => {
+    const user = await req.user
+    try {
+        let address = await addAddress(user, req.body)
+        res.status(201).send({message : "Address Added Successfully", status : 201})
+    } catch (error) {
+        res.status(500).send({ error: error.message })
+    }
+}
+
 
 export const FindOrderById = async (req, res) => {
     // const user = req.user
@@ -31,7 +42,6 @@ export const OrderHistory = async (req, res) => {
 }
 
 export const userOrders = async (req, res) => {   
-         
     const user = await req.user
     try {
         let orderHistory = await userAllOrder(user._id)

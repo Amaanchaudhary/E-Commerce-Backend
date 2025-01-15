@@ -19,7 +19,7 @@ export const createPaymentLink = async (orderId) => {    //4. created a method
 
     //6. create payment request obj
     const paymentLinkRequest = {
-      amount: order.totalPrice * 100, //amount be in paise not RS, so 1rs = 100paisa
+      amount: order.totalDiscountedPrice * 100, //amount be in paise not RS, so 1rs = 100paisa
       currency: "INR",
       customer: {
         name: `${firstname} ${lastname}`,

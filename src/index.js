@@ -20,6 +20,7 @@ const app = express();
 // Allowed origins for CORS
 const allowedOrigins = [
     "https://shoppys-me.vercel.app",
+    "https://shoppys-chvvgc9by-amaan-chaudharys-projects.vercel.app/",
     "https://amaan-ecommerce.netlify.app",
     "http://localhost:3000",
   ];
@@ -52,7 +53,7 @@ app.use(express.json());
 
 // Routes
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "Welcome to Api v6", status: true });
+    return res.status(200).send({ message: "Welcome to Api v7", status: true });
   });
 app.use("/auth", authRouters)
 app.use("/api/users", userRouters)

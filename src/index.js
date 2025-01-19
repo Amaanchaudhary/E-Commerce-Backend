@@ -38,7 +38,12 @@ app.use(cors({
     credentials: true  // Allow cookies and credentials if needed
 }));
 
-app.options('*', cors()); // Allow preflight requests globally
+app.options('', cors({
+    origin: "*",
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow the methods you need
+    allowedHeaders: ['Content-Type', 'Authorization'],  // Allow headers you need
+    credentials: true  // Allow cookies and credentials if needed
+})); // Allow preflight requests globally
 
 
 app.use(express.json())

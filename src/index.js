@@ -17,16 +17,6 @@ import connectDb from "./config/db.js";
 dotenv.config();
 const app = express();
 
-// Connect to MongoDB (ensure connection on every request)
-(async () => {
-    try {
-      await connectDb();
-      console.log("✅ Database connected successfully");
-    } catch (error) {
-      console.error("❌ Failed to connect to the database:", error.message);
-    }
-  })();
-
 // Allowed origins for CORS
 const allowedOrigins = [
     "https://shoppys-me.vercel.app",
@@ -62,7 +52,7 @@ app.use(express.json());
 
 // Routes
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "Welcome to Api v4", status: true });
+    return res.status(200).send({ message: "Welcome to Api v5", status: true });
   });
 app.use("/auth", authRouters)
 app.use("/api/users", userRouters)

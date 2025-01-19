@@ -18,7 +18,7 @@ const app = express();
 
 
 // Allowed origins for CORS
-const allowedOrigins = ['https://shoppys-me.vercel.app', 'https://amaan-ecommerce.netlify.app'];
+const allowedOrigins = ['https://shoppys-me.vercel.app', 'https://amaan-ecommerce.netlify.app', "http://localhost:3000"];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -28,7 +28,7 @@ app.use(cors({
         }
         return callback(new Error('CORS policy does not allow access from this origin'), false); // Reject the request
     },
-    credentials: true, // Allow cookies and authentication headers
+    // credentials: true, // Allow cookies and authentication headers
 }));
 
 app.options('*', cors()); // Allow preflight requests globally
@@ -37,7 +37,7 @@ app.options('*', cors()); // Allow preflight requests globally
 app.use(express.json())
 
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "Welcome to Ecommerce Api", status: true })
+    return res.status(200).send({ message: "Welcome to Api", status: true })
 })
 
 app.use("/auth", authRouters)

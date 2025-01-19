@@ -19,18 +19,6 @@ const app = express();
 const allowedOrigins = ['https://amaan-ecommerce.netlify.app'];
 
 app.use(cors());
-// app.use(cors({
-//     origin: function (origin, callback) {
-//         // Allow requests with no origin (like mobile apps or curl requests)
-//         if (!origin) return callback(null, true);
-//         if (allowedOrigins.indexOf(origin) === -1) {
-//             const msg = 'The CORS policy for this site does not allow access from the specified origin.';
-//             return callback(new Error(msg), false);
-//         }
-//         return callback(null, true);
-//     },
-//     credentials: true, // If you need to include cookies in the requests
-// }));
 
 app.options('*', cors()); // Allow preflight requests globally
 

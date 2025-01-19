@@ -20,6 +20,11 @@ const app = express();
 // Allowed origins for CORS
 const allowedOrigins = ['https://shoppys-me.vercel.app', 'https://amaan-ecommerce.netlify.app', "http://localhost:3000"];
 
+app.use((req, res, next) => {
+    console.log('Request Origin:', req.get('Origin')); // Log incoming origin
+    next();
+});
+
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests from the specified origins or no origin (for curl requests or mobile apps)

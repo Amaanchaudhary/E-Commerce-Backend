@@ -12,46 +12,58 @@ import ratingRouters from './routes/rating.routes.js'
 import adminRouters from './routes/admin.routes.js'
 import paymentRouters from './routes/payment.routes.js'
 import dotenv from 'dotenv'
+import connectDb from "./config/db.js";
 
 dotenv.config();
 const app = express();
 
+// Connect to MongoDB (ensure connection on every request)
+(async () => {
+    try {
+      await connectDb();
+      console.log("✅ Database connected successfully");
+    } catch (error) {
+      console.error("❌ Failed to connect to the database:", error.message);
+    }
+  })();
 
 // Allowed origins for CORS
-const allowedOrigins = ['https://shoppys-me.vercel.app', 'https://amaan-ecommerce.netlify.app', "http://localhost:3000"];
+const allowedOrigins = [
+    "https://shoppys-me.vercel.app",
+    "https://amaan-ecommerce.netlify.app",
+    "http://localhost:3000",
+  ];
 
+// Middleware to log request origins (optional for production)
 app.use((req, res, next) => {
-    console.log('Request Origin:', req.get('Origin')); // Log incoming origin
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Request Origin:", req.get("Origin"));
+    }
     next();
-});
+  });
 
-app.use(cors({
-    origin: function (origin, callback) {
-        // Allow requests from the specified origins or no origin (for curl requests or mobile apps)
+// CORS setup
+app.use(
+    cors({
+      origin: (origin, callback) => {
         if (!origin || allowedOrigins.includes(origin)) {
-            return callback(null, true); // Allow the request
+          return callback(null, true);
         }
-        return callback(new Error('CORS policy does not allow access from this origin'), false); // Reject the request
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow the methods you need
-    allowedHeaders: ['Content-Type', 'Authorization'],  // Allow headers you need
-    credentials: true  // Allow cookies and credentials if needed
-}));
+        return callback(new Error("CORS policy does not allow access from this origin"), false);
+      },
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    })
+  );
 
-app.options('', cors({
-    origin: "*",
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow the methods you need
-    allowedHeaders: ['Content-Type', 'Authorization'],  // Allow headers you need
-    credentials: true  // Allow cookies and credentials if needed
-})); // Allow preflight requests globally
+// JSON body parser
+app.use(express.json());
 
-
-app.use(express.json())
-
+// Routes
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "Welcome to Api v3", status: true })
-})
-
+    return res.status(200).send({ message: "Welcome to Api v4", status: true });
+  });
 app.use("/auth", authRouters)
 app.use("/api/users", userRouters)
 app.use("/api/products", productRouters)
@@ -63,5 +75,11 @@ app.use("/api/reviews", reviewRouters)
 app.use("/api/ratings", ratingRouters)
 app.use("/api/admin/orders", adminRouters)
 app.use("/api/payments", paymentRouters)
+
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err.message);
+    res.status(500).send({ error: "An unexpected error occurred" });
+  });
 
 export default app;

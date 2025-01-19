@@ -16,11 +16,23 @@ import dotenv from 'dotenv'
 dotenv.config();
 const app = express();
 
-const allowedOrigins = ['https://amaan-ecommerce.netlify.app'];
 
-app.use(cors());
+// Allowed origins for CORS
+const allowedOrigins = ['https://shoppys-me.vercel.app', 'https://amaan-ecommerce.netlify.app'];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests from the specified origins or no origin (for curl requests or mobile apps)
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true); // Allow the request
+        }
+        return callback(new Error('CORS policy does not allow access from this origin'), false); // Reject the request
+    },
+    credentials: true, // Allow cookies and authentication headers
+}));
 
 app.options('*', cors()); // Allow preflight requests globally
+
 
 app.use(express.json())
 

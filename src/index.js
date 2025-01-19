@@ -49,7 +49,7 @@ app.options('', cors({
 app.use(express.json())
 
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "Welcome to Api v2", status: true })
+    return res.status(200).send({ message: "Welcome to Api v3", status: true })
 })
 
 app.use("/auth", authRouters)

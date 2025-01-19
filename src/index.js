@@ -52,7 +52,7 @@ app.use(express.json());
 
 // Routes
 app.get("/", (req, res) => {
-    return res.status(200).send({ message: "Welcome to Api v5", status: true });
+    return res.status(200).send({ message: "Welcome to Api v6", status: true });
   });
 app.use("/auth", authRouters)
 app.use("/api/users", userRouters)

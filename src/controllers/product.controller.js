@@ -43,6 +43,7 @@ export const FindProductById = async (req, res) => {
 }
 
 export const GetAllProducts = async (req, res) => {
+    console.log("hello , product");
     
     try {
         const products = await getAllProducts(req.query)
